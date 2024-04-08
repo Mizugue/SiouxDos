@@ -3,7 +3,7 @@ import random
 import threading
 import time
 from colorama import Fore
-
+import json
 
 
 
@@ -51,41 +51,49 @@ def image_ascii():
 
 
 def menu():
-  try:
-    target = (input('Alvo➳ '))
-    threads = (int(input("Número de Threads➳ ")))
-    delay = (int(input("Delay(intervalo entre requisicoes)➳ ")))
-    metodo = (input("Qual método do ataque(POST/GET)➳ "))
-    opprox = (input("Deseja utilizar proxies➳ "))
-  except:
-    print('Voce digitou algo errado.....\n')
-    menu()
-
-  if opprox != 'sim' and opprox != 'SIM' and opprox != 'nao' and opprox != "NAO" and opprox != "Sim" and opprox != 'Nao':
-    print('Opcoes --> sim ou nao!\n')
-    menu()
-  elif opprox == 'Sim' or opprox == 'sim' or opprox == 'SIM':
-    opprox = True
-  else:
-    opprox = None
-
-  if metodo != 'post' and metodo != 'POST' and metodo != 'get' and metodo != 'GET':
-    print('Opcoes --> POST ou GET!\n')
-    menu()
-
-  elif metodo == 'post' or metodo == 'POST':
+    entradas = []
+    conteudo = []
+    dados = {}
     try:
-      payload = input("Payload➳ ")
-      return target, threads, delay, metodo, payload, opprox
-    except EOFError:
-      payload = ''
-      return target, threads, delay, metodo, payload, opprox
+        target = (input('Alvo➳ '))
+        threads = (int(input("Número de Threads➳ ")))
+        delay = (int(input("Delay(intervalo entre requisicoes)➳ ")))
+        metodo = (input("Qual método do ataque(POST/GET)➳ "))
+        opprox = (input("Deseja utilizar proxies➳ "))
     except:
-      print('Voce digitou algo errado....\n')
-      menu()
+        print('Voce digitou algo errado.....\n')
+        menu()
 
-  else:
-    return target, threads, delay, metodo, opprox
+    if opprox != 'sim' and opprox != 'SIM' and opprox != 'nao' and opprox != "NAO" and opprox != "Sim" and opprox != 'Nao':
+        print('Opcoes --> sim ou nao!\n')
+        menu()
+    elif opprox == 'Sim' or opprox == 'sim' or opprox == 'SIM':
+        opprox = True
+    else:
+        opprox = None
+
+    if metodo != 'post' and metodo != 'POST' and metodo != 'get' and metodo != 'GET':
+        print('Opcoes --> POST ou GET!\n')
+        menu()
+
+    elif metodo == 'post' or metodo == 'POST':
+        try:
+            vezes = (int(input("Número de parametros(POST): ")))
+            for i in range(0, vezes):
+                entradas.append((input(f"{i + 1} parametro: ")))
+                conteudo.append((input(f"Conteúdo de {entradas[i]}: ")))
+                dados.update({entradas[i]: conteudo[i]})
+            payload = json.dumps(dados)
+            return target, threads, delay, metodo, payload, opprox
+        except EOFError:
+            payload = ''
+            return target, threads, delay, metodo, payload, opprox
+        except:
+            print('Voce digitou algo errado....\n')
+            menu()
+
+    else:
+        return target, threads, delay, metodo, opprox
 
 
 
@@ -243,6 +251,3 @@ if __name__ == "__main__":
            4    .             
            J.                 
           '$$                  \n""")
-
-
-
